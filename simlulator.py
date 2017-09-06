@@ -15,7 +15,8 @@ class Display(object):
 		
 		self.start_of_video_memory = start_of_video_memory
 		self.start_of_character_memory = start_of_character_memory
-		self.colors = ["red", "orange", "yellow", "green", "blue", "purple", "black", "white"]
+		# Color list based on C64 color chart REF: http://sta.c64.org/cbm64col.html
+		self.colors = ["black", "white", "red", "cyan", "purple", "green", "blue", "yellow", "orange", "brown", "pink", "darkgrey", "grey", "lightgreen", "lightblue", "lightgrey"]
 		
 	def update(self):
 
@@ -54,7 +55,7 @@ for _ in range(0, 65536):
 
 while True:
 	for i in range(1024 + 768):
-		memory[i] = random.randint(0, 7)
+		memory[i] = random.randint(0, len(display.colors) - 1)
 
 	for i in range(2048, 2248):
 		memory[i] = random.randint(65, 90)
