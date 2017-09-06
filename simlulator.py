@@ -54,7 +54,7 @@ for _ in range(0, 65536):
 
 
 while True:
-	for i in range(1024 + 768):
+	for i in range(1024, 1024 + 768):
 		memory[i] = random.randint(0, len(display.colors) - 1)
 
 	for i in range(2048, 2248):
