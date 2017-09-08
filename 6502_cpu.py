@@ -16,6 +16,9 @@ class CPU(object):
 		# Create program counter
 		self.pc = pc
 		
+		# Create stack pointer
+		self.stack_pointer = 0xff
+		
 	def tick(self, memory):
 		
 		#INX
@@ -56,6 +59,6 @@ if __name__ == "__main__":
 	print("Overflow: {}".format(cpu.overflow))
 	print("Zero: {}".format(cpu.zero))
 	print("")
-	print("Program Counter: ")
+	print("Miscellaneous:")
 	print("Program Counter: {}".format(cpu.pc))
-
+	print("Stack Pointer: {}".format(cpu.stack_pointer))
