@@ -1,5 +1,5 @@
 class CPU(object):
-	def __init__(self, pc=0x1000):
+	def __init__(self, program_counter=0x1000):
 		# Create registers
 		self.a = 0
 		self.x = 0
@@ -14,7 +14,7 @@ class CPU(object):
 		self.zero = False
 		
 		# Create program counter
-		self.pc = pc
+		self.program_counter = program_counter
 		
 		# Create stack pointer
 		self.stack_pointer = 0xff
@@ -60,5 +60,5 @@ if __name__ == "__main__":
 	print("Zero: {}".format(cpu.zero))
 	print("")
 	print("Miscellaneous:")
-	print("Program Counter: {}".format(cpu.pc))
+	print("Program Counter: {}".format(cpu.program_counter))
 	print("Stack Pointer: {}".format(cpu.stack_pointer))
