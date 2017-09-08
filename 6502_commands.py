@@ -22,10 +22,20 @@ commands = {
 			"cycles": 4
 		}
 		
-	} 
+	}, 
 	# End of ADC
 
-
+	# Start of BPL
+	"BPL":{
+		
+		0x10:{
+			"mode":"",
+			"length": 1,
+			"cycles": 3
+		}
+		
+	} 
+	# End of BPL
 		
 }
 
@@ -38,7 +48,7 @@ for command in commands:
 		mode = commands[command][hex]['mode']
 		length = commands[command][hex]["length"]
 		cycles = commands[command][hex]["cycles"]
-		print("Command: {}  Mode: {:10s}  Length: {}  Clock Cycles: {}".format(command, mode, length, cycles))
+		print("Command: {} Op Code: {} Mode: {:10s}  Length: {}  Clock Cycles: {}".format(command, hex, mode, length, cycles))
 	
 	print("")	
 		
