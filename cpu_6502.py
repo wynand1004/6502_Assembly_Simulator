@@ -19,76 +19,98 @@ class CPU(object):
 		# Create stack pointer
 		self.stack_pointer = 0xff
 		
+		#Opcode Length
+		self.opcode_length = {0: 1, 192: 2, 132: 2, 5: 2, 134: 2, 136: 1, 9: 2, 138: 1, 140: 3, 13: 3, 142: 3, 237: 3, 16: 2, 152: 1, 56: 1, 24: 1, 154: 1, 133: 2, 160: 2, 176: 2, 162: 2, 164: 2, 165: 2, 166: 2, 96: 1, 168: 1, 169: 2, 170: 1, 172: 3, 173: 3, 174: 3, 48: 2, 200: 1, 184: 1, 88: 1, 186: 1, 76: 3, 64: 1, 32: 3, 196: 2, 197: 2, 198: 2, 72: 1, 201: 2, 202: 1, 204: 3, 205: 3, 206: 3, 141: 3, 80: 2, 248: 1, 216: 1, 229: 2, 224: 2, 144: 2, 228: 2, 101: 2, 230: 2, 232: 1, 105: 2, 234: 1, 236: 3, 109: 3, 238: 3, 112: 2, 104: 1, 108: 3, 233: 2, 120: 1}
+
+	def get_location(self, low, high = 0x00):
+		return (high * 0x100) + low
+
 	def tick(self, memory):
-		
 		opcode = memory[self.program_counter]
 
 		#LDA Immediate
 		if opcode == 0xa9:
-			self.a = memory[self.program_counter + 1]
-			self.program_counter += 0x02
+			self.a = memory[self.program_counter + 0x01]
+			
+			self.program_counter += self.opcode_length[opcode]
+
 			print ("LDA {}".format(self.a))
 
 		#STA Absolute
 		if opcode == 0x8d:
-			low = memory[self.program_counter + 0x01]
-			high = memory[self.program_counter + 0x02]
-			location = (high * 0x100) + low
+			location = self.get_location(memory[self.program_counter + 0x01], memory[self.program_counter + 0x02])
+			
 			memory[location] = self.a
-			self.program_counter += 0x03
+			
+			self.program_counter += self.opcode_length[opcode]
+
 			print("STA {}".format(location))
 
 		#LDX Immediate
 		if opcode == 0xa2:
-			self.x = memory[self.program_counter + 1]
-			self.program_counter += 0x02
+			self.x = memory[self.program_counter + 0x01]
+			
+			self.program_counter += self.opcode_length[opcode]
+
 			print ("LDX {}".format(self.x))
 
 		#STX Absolute
 		if opcode == 0x8e:
-			low = memory[self.program_counter + 0x01]
-			high = memory[self.program_counter + 0x02]
-			location = (high * 0x100) + low
+			location = self.get_location(memory[self.program_counter + 0x01], memory[self.program_counter + 0x02])
+			
 			memory[location] = self.x
-			self.program_counter += 0x03
+			
+			self.program_counter += self.opcode_length[opcode]
+
 			print("STX {}".format(location))
 
 		#INC Absolute
 		if opcode == 0xee:
-			low = memory[self.program_counter + 0x01]
-			high = memory[self.program_counter + 0x02]
-			location = (high * 0x100) + low
+			location = self.get_location(memory[self.program_counter + 0x01], memory[self.program_counter + 0x02])
+			
 			value = memory[location]						
+			
 			value += 0x01
+			
 			if value > 0xff:
 				value = 0x00
 			self.carry = True
+
 			memory[location] = value
-			self.program_counter += 0x03
+
+			self.program_counter += self.opcode_length[opcode]
+
 			print("INC {}".format(location))
 
 		#INX
 		if opcode == 0xe8:
 			self.x += 0x01
+
 			if self.x > 0xff:
 				self.x = 0x00
 				self.carry_flag = True
-			self.program_counter += 0x01
-		
+
+			self.program_counter += self.opcode_length[opcode]
+
+			print("INX")
+
 		#INY
 		if opcode == 0xc8:
 			self.y += 0x01
+
 			if self.y > 0xff:
 				self.y = 0x00
 				self.carry_flag = True		
-			self.program_counter += 0x01
+			
+			self.program_counter += self.opcode_length[opcode]
+			print("INY")
 
 		#JMP Absolute
 		if opcode == 0x4c:
-			low = memory[self.program_counter + 0x01]
-			high = memory[self.program_counter + 0x02]
-			location = (high * 0x100) + low
+			location = self.get_location(memory[self.program_counter + 0x01], memory[self.program_counter + 0x02])
+			
 			self.program_counter = location
+			
 			print("JMP {}".format(location))
 
 
