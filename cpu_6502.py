@@ -25,47 +25,47 @@ class CPU(object):
 	def get_location(self, low, high = 0x00):
 		return (high * 0x100) + low
 
+	def trace(self, msg):
+		print(msg)
+
 	def tick(self, memory):
 		opcode = memory[self.program_counter]
 
-		#LDA Immediate
+		# Get the length of the opcode_offset for the next command
+		# This should be 0 for jmp, jsr, ret
+
+		opcode_offset = self.opcode_length[opcode]
+
+		# LDA Immediate
 		if opcode == 0xa9:
 			self.a = memory[self.program_counter + 0x01]
-			
-			self.program_counter += self.opcode_length[opcode]
 
-			print ("LDA {}".format(self.a))
+			self.trace("LDA {}".format(self.a))
 
-		#STA Absolute
-		if opcode == 0x8d:
+		# STA Absolute
+		elif opcode == 0x8d:
 			location = self.get_location(memory[self.program_counter + 0x01], memory[self.program_counter + 0x02])
 			
 			memory[location] = self.a
-			
-			self.program_counter += self.opcode_length[opcode]
 
-			print("STA {}".format(location))
+			self.trace("STA {}".format(location))
 
-		#LDX Immediate
-		if opcode == 0xa2:
+		# LDX Immediate
+		elif opcode == 0xa2:
 			self.x = memory[self.program_counter + 0x01]
-			
-			self.program_counter += self.opcode_length[opcode]
 
-			print ("LDX {}".format(self.x))
+			self.trace("LDX {}".format(self.x))
 
-		#STX Absolute
-		if opcode == 0x8e:
+		# STX Absolute
+		elif opcode == 0x8e:
 			location = self.get_location(memory[self.program_counter + 0x01], memory[self.program_counter + 0x02])
 			
 			memory[location] = self.x
-			
-			self.program_counter += self.opcode_length[opcode]
 
-			print("STX {}".format(location))
+			self.trace("STX {}".format(location))
 
-		#INC Absolute
-		if opcode == 0xee:
+		# INC Absolute
+		elif opcode == 0xee:
 			location = self.get_location(memory[self.program_counter + 0x01], memory[self.program_counter + 0x02])
 			
 			value = memory[location]						
@@ -78,144 +78,129 @@ class CPU(object):
 
 			memory[location] = value
 
-			self.program_counter += self.opcode_length[opcode]
+			self.trace("INC {}".format(location))
 
-			print("INC {}".format(location))
-
-		#INX
-		if opcode == 0xe8:
+		# INX
+		elif opcode == 0xe8:
 			self.x += 0x01
 
 			if self.x > 0xff:
 				self.x = 0x00
 				self.carry_flag = True
 
-			self.program_counter += self.opcode_length[opcode]
+			self.trace("INX")
 
-			print("INX")
-
-		#INY
-		if opcode == 0xc8:
+		# INY
+		elif opcode == 0xc8:
 			self.y += 0x01
 
 			if self.y > 0xff:
 				self.y = 0x00
 				self.carry_flag = True		
 			
-			self.program_counter += self.opcode_length[opcode]
-			print("INY")
+			self.trace("INY")
 
-		#JMP Absolute
-		if opcode == 0x4c:
+		# JMP Absolute
+		elif opcode == 0x4c:
 			location = self.get_location(memory[self.program_counter + 0x01], memory[self.program_counter + 0x02])
-			
 			self.program_counter = location
+
+			# Do not change PC by opcode length
+			opcode_offset = 0
+
+			self.trace("JMP {}".format(location))
 			
-			print("JMP {}".format(location))
-			
-		#TAX
-		if opcode == 0xAA:
+		# TAX
+		elif opcode == 0xAA:
 			self.x = self.a
 			
-			self.program_counter += self.opcode_length[opcode]
-			print("TAX")
+			self.trace("TAX")
 			
-		#TXA
-		if opcode == 0x8A:
+		# TXA
+		elif opcode == 0x8A:
 			self.a = self.x
 			
-			self.program_counter += self.opcode_length[opcode]
-			print("TXA")
+			self.trace("TXA")
 		
-		#DEX
-		if opcode == 0xCA:
+		# DEX
+		elif opcode == 0xCA:
 			self.x -= 0x01
 
 			if self.x < 0x00:
 				self.x = 0xff
 			
-			self.program_counter += self.opcode_length[opcode]
-			print("DEX")
+			self.trace("DEX")
 		
-		#TAY
-		if opcode == 0xA8:
+		# TAY
+		elif opcode == 0xA8:
 			self.y = self.a
-			
-			self.program_counter += self.opcode_length[opcode]
-			print("TAY")
+
+			self.trace("TAY")
 		
-		#TYA
-		if opcode == 0x98:
+		# TYA
+		elif opcode == 0x98:
 			self.a = self.y
 			
-			self.program_counter += self.opcode_length[opcode]
-			print("TYA")
+			self.trace("TYA")
 			
-		#DEY
-		if opcode == 0x88:
+		# DEY
+		elif opcode == 0x88:
 			self.y -= 0x01		
 
 			if self.y < 0x00:
 				self.y = 0xff
 			
-			self.program_counter += self.opcode_length[opcode]
-			print("DEY")
+			self.trace("DEY")
 
-		#CLC
-		if opcode == 0x18:
+		# CLC
+		elif opcode == 0x18:
 			self.carry = False		
 			
-			self.program_counter += self.opcode_length[opcode]
-			print("CLC")
+			self.trace("CLC")
 		
-		#SEC
-		if opcode == 0x38:
+		# SEC
+		elif opcode == 0x38:
 			self.carry = True		
 			
-			self.program_counter += self.opcode_length[opcode]
-			print("SEC")
+			self.trace("SEC")
 			
-		#CLI
-		if opcode == 0x58:
+		# CLI
+		elif opcode == 0x58:
 			self.interrupt = False		
 			
-			self.program_counter += self.opcode_length[opcode]
-			print("CLI")
+			self.trace("CLI")
 			
-		#SEI
-		if opcode == 0x78:
+		# SEI
+		elif opcode == 0x78:
 			self.carry = True		
 			
-			self.program_counter += self.opcode_length[opcode]
-			print("SEI")
+			self.trace("SEI")
 			
-		#CLV
-		if opcode == 0xB8:
+		# CLV
+		elif opcode == 0xB8:
 			self.overflow = False		
 			
-			self.program_counter += self.opcode_length[opcode]
-			print("CLV")
+			self.trace("CLV")
 		
-		#CLD
-		if opcode == 0xD8:
+		# CLD
+		elif opcode == 0xD8:
 			self.decimal = False		
 			
-			self.program_counter += self.opcode_length[opcode]
-			print("CLD")
+			self.trace("CLD")
 		
-		#SED
-		if opcode == 0xF8:
+		# SED
+		elif opcode == 0xF8:
 			self.decimal = True		
-			
-			self.program_counter += self.opcode_length[opcode]
-			print("SED")
-			
-		#NOP
-		if opcode == 0xEA:
-			
-			self.program_counter += self.opcode_length[opcode]
-			print("NOP")
 
+			self.trace("SED")
+			
+		# NOP
+		elif opcode == 0xEA:
+
+			self.trace("NOP")
+
+		# Set the PC to the new location
+		self.program_counter += opcode_offset
 
 
 if __name__ == "__main__":	
