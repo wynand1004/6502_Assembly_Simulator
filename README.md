@@ -8,4 +8,4 @@ This is a work in progress.  Only a few instructions have been coded, but the si
  - You should see a number of red squares appear row by row in the top half of the display.
 
 # Known Issues
- - For some reason, the display freezes on Mac. This is a known bug in tkinter on the Mac
+ - For some reason, the display can freeze on Mac. This is a known bug in tkinter on the Mac
