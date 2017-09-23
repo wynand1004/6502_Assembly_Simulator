@@ -20,10 +20,21 @@ class CPU(object):
 		self.stack_pointer = 0xff
 		
 		#Opcode Length
-		self.opcode_length = {0: 1, 192: 2, 132: 2, 5: 2, 134: 2, 136: 1, 9: 2, 138: 1, 140: 3, 13: 3, 142: 3, 237: 3, 16: 2, 152: 1, 56: 1, 24: 1, 154: 1, 133: 2, 160: 2, 176: 2, 162: 2, 164: 2, 165: 2, 166: 2, 96: 1, 168: 1, 169: 2, 170: 1, 172: 3, 173: 3, 174: 3, 48: 2, 200: 1, 184: 1, 88: 1, 186: 1, 76: 3, 64: 1, 32: 3, 196: 2, 197: 2, 198: 2, 72: 1, 201: 2, 202: 1, 204: 3, 205: 3, 206: 3, 141: 3, 80: 2, 248: 1, 216: 1, 229: 2, 224: 2, 144: 2, 228: 2, 101: 2, 230: 2, 232: 1, 105: 2, 234: 1, 236: 3, 109: 3, 238: 3, 112: 2, 104: 1, 108: 3, 233: 2, 120: 1}
+		self.opcode_length = {0: 1, 192: 2, 132: 2, 5: 2, 134: 2, 136: 1, 9: 2, 138: 1, 140: 3, 13: 3, 142: 3, 237: 3, 16: 2, 152: 1, 56: 1, 24: 1, 154: 1, 133: 2, 160: 2, 176: 2, 162: 2, 164: 2, 165: 2, 166: 2, 96: 1, 168: 1, 169: 2, 170: 1, 172: 3, 173: 3, 174: 3, 48: 2, 200: 1, 184: 1, 88: 1, 186: 1, 76: 3, 64: 1, 32: 3, 196: 2, 197: 2, 198: 2, 72: 1, 201: 2, 202: 1, 204: 3, 205: 3, 206: 3, 141: 3, 80: 2, 248: 1, 216: 1, 229: 2, 224: 2, 144: 2, 228: 2, 101: 2, 230: 2, 232: 1, 105: 2, 234: 1, 236: 3, 109: 3, 238: 3, 112: 2, 104: 1, 108: 3, 233: 2, 120: 1, 0xc9: 2, 0xf0: 2}
 
 	def get_location(self, low, high = 0x00):
 		return (high * 0x100) + low
+
+	def convert_unsigned_to_signed(self, value):
+		"""Converts an unsigned integer to a signed integer"""
+		#
+		#
+		#
+		# NOT IMPLEMENTED
+		#
+		#
+		#
+		return value
 
 	def trace(self, msg):
 		print(msg)
@@ -39,6 +50,11 @@ class CPU(object):
 		# LDA Immediate
 		if opcode == 0xa9:
 			self.a = memory[self.program_counter + 0x01]
+
+			if self.a == 0:
+				self.zero = True
+			else:
+				self.zero = False
 
 			self.trace("LDA {}".format(self.a))
 
@@ -74,7 +90,6 @@ class CPU(object):
 			
 			if value > 0xff:
 				value = 0x00
-			self.carry = True
 
 			memory[location] = value
 
@@ -86,7 +101,6 @@ class CPU(object):
 
 			if self.x > 0xff:
 				self.x = 0x00
-				self.carry_flag = True
 
 			self.trace("INX")
 
@@ -95,8 +109,7 @@ class CPU(object):
 			self.y += 0x01
 
 			if self.y > 0xff:
-				self.y = 0x00
-				self.carry_flag = True		
+				self.y = 0x00	
 			
 			self.trace("INY")
 
@@ -198,6 +211,35 @@ class CPU(object):
 		elif opcode == 0xEA:
 
 			self.trace("NOP")
+
+		# CMP Immediate CMP #0xff
+		elif opcode == 0xC9:
+			value = memory[self.program_counter + 0x01]
+			if value == self.a:
+				self.zero = True
+			elif value > self.a:
+				self.carry = True
+
+			self.trace("CMP {}".format(value))
+
+		# BNE
+		elif opcode == 0xD0:
+			pass
+
+		# BEQ
+		elif opcode == 0xF0:
+			if self.zero == True:
+				# Get the value of the offset
+				value = memory[self.program_counter + 0x01]
+				# Convert that to a positive or negative number
+				branch_offset = self.convert_unsigned_to_signed(value)
+				# Update the program counter
+				self.program_counter += branch_offset
+				
+				self.trace("BEQ Offset: {}".format(branch_offset))
+
+			else:
+				self.trace("BEQ: NOT EQUAL")
 
 		# Set the PC to the new location
 		self.program_counter += opcode_offset

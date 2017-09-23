@@ -68,7 +68,7 @@ for _ in range(0, 65536):
 cpu = CPU(0x1000)
 
 # Add code for testing
-memory[4096] = 0xa9 # LDA #0x02
+memory[4096] = 0xa9 # LDA #0x01
 memory[4097] = 0x02
 memory[4098] = 0x8d # STA 0x400
 memory[4099] = 0x00
@@ -79,12 +79,21 @@ memory[4103] = 0x10
 memory[4104] = 0xaa # TAX 
 memory[4105] = 0xe8 # INX 
 memory[4106] = 0x8a # TXA 
-memory[4107] = 0xa8 # TAY 
-memory[4108] = 0xc8 # INY 
-memory[4109] = 0x98 # TYA 
-memory[4110] = 0x4c  # JMP 0x1002 (4097)
-memory[4111] = 0x02
-memory[4112] = 0x10
+memory[4107] = 0xc9 # CMP #0x0f
+memory[4108] = 0x0f
+memory[4109] = 0xf0 # BEQ (Jump ahead 3 memory locations after start of next instruction)
+memory[4110] = 0x03 
+memory[4111] = 0x4c # JMP 0x1002 (4097)
+memory[4112] = 0x02
+memory[4113] = 0x10
+memory[4114] = 0xa9 # LDA #0x01
+memory[4115] = 0x01
+memory[4116] = 0xea # NOP
+memory[4117] = 0x4c # JMP 0x1002 (4097)
+memory[4118] = 0x02
+memory[4119] = 0x10
+
+
 
 while True:
 	# Clock tick
