@@ -115,14 +115,14 @@ class CPU(object):
 			
 		#TAX
 		if opcode == 0xAA:
-			self.a = self.x
+			self.x = self.a
 			
 			self.program_counter += self.opcode_length[opcode]
 			print("TAX")
 			
 		#TXA
 		if opcode == 0x8A:
-			self.x = self.a
+			self.a = self.x
 			
 			self.program_counter += self.opcode_length[opcode]
 			print("TXA")
@@ -130,27 +130,33 @@ class CPU(object):
 		#DEX
 		if opcode == 0xCA:
 			self.x -= 0x01
+
+			if self.x < 0x00:
+				self.x = 0xff
 			
 			self.program_counter += self.opcode_length[opcode]
 			print("DEX")
 		
 		#TAY
 		if opcode == 0xA8:
-			self.a = self.y
-			
-			self.program_counter += self.opcode_length[opcode]
-			print("TAy")
-		
-		#TYA
-		if opcode == 0x98:
 			self.y = self.a
 			
 			self.program_counter += self.opcode_length[opcode]
-			print("TAX")
+			print("TAY")
+		
+		#TYA
+		if opcode == 0x98:
+			self.a = self.y
+			
+			self.program_counter += self.opcode_length[opcode]
+			print("TYA")
 			
 		#DEY
 		if opcode == 0x88:
 			self.y -= 0x01		
+
+			if self.y < 0x00:
+				self.y = 0xff
 			
 			self.program_counter += self.opcode_length[opcode]
 			print("DEY")

@@ -33,7 +33,12 @@ class Display(object):
 		for x in range(0, 32):
 			for y in range(0, 24):
 				m = self.start_of_video_memory + (y * 32) + (x)
-				color = self.colors[memory[m]]
+				# Prevent values greater than length of color list
+				if memory[m] > len(self.colors) - 1:
+					# Set color to white
+					color = "white" 
+				else:
+					color = self.colors[memory[m]]
 				self.canvas.create_rectangle(x * 10, y * 10, x * 10 + 10, y * 10 + 10, fill=color)	
 
 		# Update text label (40 x 5 Characters)
@@ -71,9 +76,15 @@ memory[4100] = 0x04
 memory[4101] = 0xee # INC 0x1003 (4099)
 memory[4102] = 0x03 
 memory[4103] = 0x10 
-memory[4104] = 0x4c  # JMP 0x1000
-memory[4105] = 0x00
-memory[4106] = 0x10
+memory[4104] = 0xaa # TAX 
+memory[4105] = 0xe8 # INX 
+memory[4106] = 0x8a # TXA 
+memory[4107] = 0xa8 # TAY 
+memory[4108] = 0xc8 # INY 
+memory[4109] = 0x98 # TYA 
+memory[4110] = 0x4c  # JMP 0x1002 (4097)
+memory[4111] = 0x02
+memory[4112] = 0x10
 
 while True:
 	# Clock tick
