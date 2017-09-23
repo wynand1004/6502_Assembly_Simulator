@@ -112,6 +112,103 @@ class CPU(object):
 			self.program_counter = location
 			
 			print("JMP {}".format(location))
+			
+		#TAX
+		if opcode == 0xAA:
+			self.a = self.x
+			
+			self.program_counter += self.opcode_length[opcode]
+			print("TAX")
+			
+		#TXA
+		if opcode == 0x8A:
+			self.x = self.a
+			
+			self.program_counter += self.opcode_length[opcode]
+			print("TXA")
+		
+		#DEX
+		if opcode == 0xCA:
+			self.x -= 0x01
+			
+			self.program_counter += self.opcode_length[opcode]
+			print("DEX")
+		
+		#TAY
+		if opcode == 0xA8:
+			self.a = self.y
+			
+			self.program_counter += self.opcode_length[opcode]
+			print("TAy")
+		
+		#TYA
+		if opcode == 0x98:
+			self.y = self.a
+			
+			self.program_counter += self.opcode_length[opcode]
+			print("TAX")
+			
+		#DEY
+		if opcode == 0x88:
+			self.y -= 0x01		
+			
+			self.program_counter += self.opcode_length[opcode]
+			print("DEY")
+
+		#CLC
+		if opcode == 0x18:
+			self.carry = False		
+			
+			self.program_counter += self.opcode_length[opcode]
+			print("CLC")
+		
+		#SEC
+		if opcode == 0x38:
+			self.carry = True		
+			
+			self.program_counter += self.opcode_length[opcode]
+			print("SEC")
+			
+		#CLI
+		if opcode == 0x58:
+			self.interrupt = False		
+			
+			self.program_counter += self.opcode_length[opcode]
+			print("CLI")
+			
+		#SEI
+		if opcode == 0x78:
+			self.carry = True		
+			
+			self.program_counter += self.opcode_length[opcode]
+			print("SEI")
+			
+		#CLV
+		if opcode == 0xB8:
+			self.overflow = False		
+			
+			self.program_counter += self.opcode_length[opcode]
+			print("CLV")
+		
+		#CLD
+		if opcode == 0xD8:
+			self.decimal = False		
+			
+			self.program_counter += self.opcode_length[opcode]
+			print("CLD")
+		
+		#SED
+		if opcode == 0xF8:
+			self.decimal = True		
+			
+			self.program_counter += self.opcode_length[opcode]
+			print("SED")
+			
+		#NOP
+		if opcode == 0xEA:
+			
+			self.program_counter += self.opcode_length[opcode]
+			print("NOP")
 
 
 
