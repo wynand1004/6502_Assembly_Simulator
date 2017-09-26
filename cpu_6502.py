@@ -40,6 +40,7 @@ class CPU(object):
 		print(msg)
 
 	def tick(self, memory):
+		memory_updated = False
 		opcode = memory[self.program_counter]
 
 		# Get the length of the opcode_offset for the next command
@@ -64,6 +65,8 @@ class CPU(object):
 			
 			memory[location] = self.a
 
+			memory_updated = True
+
 			self.trace("STA {}".format(location))
 
 		# LDX Immediate
@@ -78,6 +81,8 @@ class CPU(object):
 			
 			memory[location] = self.x
 
+			memory_updated = True
+
 			self.trace("STX {}".format(location))
 
 		# INC Absolute
@@ -90,6 +95,8 @@ class CPU(object):
 			
 			if value > 0xff:
 				value = 0x00
+
+			memory_updated = True
 
 			memory[location] = value
 
@@ -243,6 +250,8 @@ class CPU(object):
 
 		# Set the PC to the new location
 		self.program_counter += opcode_offset
+		
+		return memory_updated
 
 
 if __name__ == "__main__":	

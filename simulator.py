@@ -61,7 +61,7 @@ display = Display(1024, 2048)
 # Memory (Simple list of integers 65kb))
 memory = []
 for _ in range(0, 65536):
-	memory.append(0)
+	memory.append(1)
 
 # CPU
 # Set start of execution memory to 0x1000 / 4096
@@ -93,14 +93,17 @@ memory[4117] = 0x4c # JMP 0x1002 (4097)
 memory[4118] = 0x02
 memory[4119] = 0x10
 
+def tick():
+	global memory
 
+	display_update_needed = cpu.tick(memory)
 
-while True:
-	# Clock tick
-	cpu.tick(memory)	
+	if display_update_needed:
+		display.update(memory)
+		
 
-	# Update the display
-	display.update(memory)
-	
+	root.after(5, tick)	
+
+tick()
 
 root.mainloop()
