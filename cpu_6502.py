@@ -19,25 +19,26 @@ class CPU(object):
 		# Create stack pointer
 		self.stack_pointer = 0xff
 		
-		#Opcode Length
-		self.opcode_length = {0: 1, 192: 2, 132: 2, 5: 2, 134: 2, 136: 1, 9: 2, 138: 1, 140: 3, 13: 3, 142: 3, 237: 3, 16: 2, 152: 1, 56: 1, 24: 1, 154: 1, 133: 2, 160: 2, 176: 2, 162: 2, 164: 2, 165: 2, 166: 2, 96: 1, 168: 1, 169: 2, 170: 1, 172: 3, 173: 3, 174: 3, 48: 2, 200: 1, 184: 1, 88: 1, 186: 1, 76: 3, 64: 1, 32: 3, 196: 2, 197: 2, 198: 2, 72: 1, 201: 2, 202: 1, 204: 3, 205: 3, 206: 3, 141: 3, 80: 2, 248: 1, 216: 1, 229: 2, 224: 2, 144: 2, 228: 2, 101: 2, 230: 2, 232: 1, 105: 2, 234: 1, 236: 3, 109: 3, 238: 3, 112: 2, 104: 1, 108: 3, 233: 2, 120: 1, 0xc9: 2, 0xf0: 2}
+		# Opcode Length
+		self.opcode_length = {0: 1, 192: 2, 132: 2, 5: 2, 134: 2, 136: 1, 9: 2, 138: 1, 140: 3, 13: 3, 142: 3, 237: 3, 16: 2, 152: 1, 56: 1, 24: 1, 154: 1, 133: 2, 160: 2, 176: 2, 162: 2, 164: 2, 165: 2, 166: 2, 96: 1, 168: 1, 169: 2, 170: 1, 172: 3, 173: 3, 174: 3, 48: 2, 200: 1, 184: 1, 88: 1, 186: 1, 76: 3, 64: 1, 32: 3, 196: 2, 197: 2, 198: 2, 72: 1, 201: 2, 202: 1, 204: 3, 205: 3, 206: 3, 141: 3, 80: 2, 248: 1, 216: 1, 229: 2, 224: 2, 144: 2, 228: 2, 101: 2, 230: 2, 232: 1, 105: 2, 234: 1, 236: 3, 109: 3, 238: 3, 112: 2, 104: 1, 108: 3, 233: 2, 120: 1, 0xc9: 2, 0xf0: 2, 0xd0: 2}
+
+		# Show Trace Output
+		self.show_trace = True
 
 	def get_location(self, low, high = 0x00):
 		return (high * 0x100) + low
 
-	def convert_unsigned_to_signed(self, value):
-		"""Converts an unsigned integer to a signed integer"""
-		#
-		#
-		#
-		# NOT IMPLEMENTED
-		#
-		#
-		#
+	def convert_signed_to_decimal(self, value):
+		"""Converts a signed integer to its decimal value."""
+		
+		if value > 127:
+			value -= 256
+
 		return value
 
 	def trace(self, msg):
-		print(msg)
+		if self.show_trace:
+			print(msg)
 
 	def tick(self, memory):
 		memory_updated = False
@@ -229,17 +230,13 @@ class CPU(object):
 
 			self.trace("CMP {}".format(value))
 
-		# BNE
-		elif opcode == 0xD0:
-			pass
-
 		# BEQ
 		elif opcode == 0xF0:
 			if self.zero == True:
 				# Get the value of the offset
 				value = memory[self.program_counter + 0x01]
 				# Convert that to a positive or negative number
-				branch_offset = self.convert_unsigned_to_signed(value)
+				branch_offset = self.convert_signed_to_decimal(value)
 				# Update the program counter
 				self.program_counter += branch_offset
 				
@@ -247,6 +244,22 @@ class CPU(object):
 
 			else:
 				self.trace("BEQ: NOT EQUAL")
+
+		# BNE
+		elif opcode == 0xD0:
+			if self.zero == False:
+				# Get the value of the offset
+				value = memory[self.program_counter + 0x01]
+				# Convert that to a positive or negative number
+				branch_offset = self.convert_signed_to_decimal(value)
+				# Update the program counter
+				self.program_counter += branch_offset
+				
+				self.trace("BNE Offset: {}".format(branch_offset))
+
+			else:
+				self.trace("BNE: NOT EQUAL")
+
 
 		# Set the PC to the new location
 		self.program_counter += opcode_offset

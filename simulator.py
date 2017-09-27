@@ -20,7 +20,7 @@ class Display(object):
 		self.canvas = tkinter.Canvas(root, width=320, height=240)
 		self.canvas.pack()
 
-		self.label = tkinter.Label(root, width=40, height=5, bg="black", fg="white")
+		self.label = tkinter.Label(root, width=40, height=5, bg="black", fg="white", justify="left", font=("Courier", 10))
 		self.label.pack()		
 		
 		self.start_of_video_memory = start_of_video_memory
@@ -68,6 +68,10 @@ memory = []
 for _ in range(0, 65536):
 	memory.append(1)
 
+# Add text to character memory
+for location in range(2048, 2249):
+	memory[location] = 65 + location % 64
+
 # CPU
 # Set start of execution memory to 0x1000 / 4096
 cpu = CPU(0x1000)
@@ -86,11 +90,11 @@ memory[4105] = 0xe8 # INX
 memory[4106] = 0x8a # TXA 
 memory[4107] = 0xc9 # CMP #0x0f
 memory[4108] = 0x0f
-memory[4109] = 0xf0 # BEQ (Jump ahead 3 memory locations after start of next instruction)
-memory[4110] = 0x03 
-memory[4111] = 0x4c # JMP 0x1002 (4097)
-memory[4112] = 0x02
-memory[4113] = 0x10
+memory[4109] = 0xd0 # BNE (Jump ahead back 13 memory locations from start of next instruction)
+memory[4110] = 0xf3 
+memory[4111] = 0xea # NOP NOP NOP
+memory[4112] = 0xea
+memory[4113] = 0xea
 memory[4114] = 0xa9 # LDA #0x01
 memory[4115] = 0x01
 memory[4116] = 0xea # NOP
