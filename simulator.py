@@ -2,7 +2,12 @@
 # https://github.com/wynand1004/6502_Assembly_Simulator
 # By wynand1004 & 18melissa40
 
-import tkinter
+# Python 2 Compatibility
+try:
+	import Tkinter as tkinter
+except:
+	import tkinter
+	
 import random
 
 from cpu_6502 import CPU
