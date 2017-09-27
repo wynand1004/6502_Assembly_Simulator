@@ -63,6 +63,10 @@ class Display(object):
 # Create the display
 display = Display(1024, 2048)
 
+# Create CPU Monitoring Label
+cpu_label = tkinter.Label(root, width=40, height=20, bg="black", fg="green", justify="left", font=("Courier", 10))
+cpu_label.pack()
+
 # Memory (Simple list of integers 65kb))
 memory = []
 for _ in range(0, 65536):
@@ -102,6 +106,29 @@ memory[4117] = 0x4c # JMP 0x1002 (4097)
 memory[4118] = 0x02
 memory[4119] = 0x10
 
+
+def update_cpu_label(cpu):
+	data = """
+6502 CPU Simulator
+Registers
+A: {}
+X: {}
+Y: {}
+
+Flags:
+Carry: {}
+Decimal: {}
+Interrupt Disable: {}
+Negative: {}
+Overflow: {}
+Zero: {}
+
+Miscellaneous:
+Program Counter: {}
+Stack Pointer: {}
+""".format(cpu.a, cpu.x, cpu.y, cpu.carry, cpu.decimal, cpu.interrupt, cpu.negative, cpu.overflow, cpu.zero, cpu.program_counter, cpu.stack_pointer)
+	cpu_label["text"]=data
+
 def tick():
 	global memory
 
@@ -110,7 +137,10 @@ def tick():
 	if display_update_needed:
 		display.update(memory)
 		
+	# Update the cpu label
+	update_cpu_label(cpu)
 
+	# Tick again
 	root.after(5, tick)	
 
 tick()

@@ -193,7 +193,7 @@ class CPU(object):
 			
 		# SEI
 		elif opcode == 0x78:
-			self.carry = True		
+			self.interrupt = True		
 			
 			self.trace("SEI")
 			
@@ -227,6 +227,9 @@ class CPU(object):
 				self.zero = True
 			elif value > self.a:
 				self.carry = True
+			else:
+				self.zero = False
+				self.carry = False
 
 			self.trace("CMP {}".format(value))
 
