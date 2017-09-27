@@ -4,7 +4,7 @@ A Simple Simulator for students to use to learn Assembly Language
 This is a work in progress.  Currently a number of commands have been coded, but there are still a lot to go.
 
 # To Try It Out
- - Download the repository and run simulator.py using Python 3 (It will NOT work in Python 2.)
+ - Download the repository and run simulator.py using Python 2 or Python 3
  - You should see a number of different colored pixels (squares) appear row by row in the top half of the display.
 
 # Known Issues
