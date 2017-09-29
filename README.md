@@ -3,29 +3,53 @@ A Simple Simulator for students to use to learn Assembly Language
 
 ## Implemented Instructions
 LDA (Immediate)
+
 STA (Absolute)
+
 LDX (Immediate)
+
 STX (Absolute)
+
 INC (Absolute)
+
 INX
+
 INY
+
 JMP (Absolute)
+
 TAX
+
 TXA
+
 DEX
+
 TAY
+
 TYA
+
 DEY
+
 CLC
+
 SEC
+
 CLI
+
 SEI
+
 CLV
+
 CLD
+
 SED
+
 NOP
+
 CMP (Immediate)
+
 BEQ
+
 BNE
 
 
