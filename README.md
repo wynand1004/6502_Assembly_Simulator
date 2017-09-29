@@ -4,7 +4,42 @@ A Simple Simulator for students to use to learn 6502 Assembly Language.
 It is a work in progress and nowhere near complete.
 
 # Implementation Details
-The program is a simulation of a computer running a 6502 CPU.  There is a 32x24 graphics display capable of displaying 16 colors, and a 40x5 text display. Graphics memory starts from 1024 ($0400), and text memory starts at 2048 ($0800). Execution begins at 4096 ($1000).  
+The program is a simulation of a computer running a 6502 CPU.  There is a 32x24 graphics display capable of displaying 16 colors, and a 40x5 text display. Graphics memory starts from 1024 ($0400), and text memory starts at 2048 ($0800). Execution begins at 4096 ($1000).  The text display displays standard ASCII characters - no unicode or double-byte characters.
+
+Color List:
+
+0 black
+
+1 white
+
+2 red
+
+3 cyan
+
+4 purple
+
+5 green
+
+6 blue
+
+7 yellow
+
+8 orange
+
+9 brown
+
+10 pink
+
+11 darkgrey
+
+12 grey
+
+13 lightgreen
+
+14 lightblue
+
+15 lightgrey
+		
 
 Currently, there is no assembler to convert the assembly code to machine code (although this feature is planned). Code must be added manually to the simulator.py file.
 
