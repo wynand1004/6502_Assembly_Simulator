@@ -10,30 +10,52 @@ Currently, there is no assembler to convert the assembly code to machine code (a
 
 Here is the current sample code:
 
-# Add code for testing
-memory\[4096\] = 0xa9 # LDA #0x01
-memory\[4097\] = 0x02
-memory\[4098\] = 0x8d # STA 0x400
-memory\[4099\] = 0x00
-memory\[4100\] = 0x04
-memory\[4101\] = 0xee # INC 0x1003 (4099)
-memory\[4102\] = 0x03 
-memory\[4103\] = 0x10 
-memory\[4104\] = 0xaa # TAX 
-memory\[4105\] = 0xe8 # INX 
-memory\[4106\] = 0x8a # TXA 
+memory[4096] = 0xa9 # LDA #0x01
+
+memory[4097] = 0x02
+
+memory[4098] = 0x8d # STA 0x400
+
+memory[4099] = 0x00
+
+memory[4100] = 0x04
+
+memory[4101] = 0xee # INC 0x1003 (4099)
+
+memory[4102] = 0x03 
+
+memory[4103] = 0x10 
+
+memory[4104] = 0xaa # TAX 
+
+memory[4105] = 0xe8 # INX 
+
+memory[4106] = 0x8a # TXA 
+
 memory[4107] = 0xc9 # CMP #0x0f
+
 memory[4108] = 0x0f
+
 memory[4109] = 0xd0 # BNE (Jump ahead back 13 memory locations from start of next instruction)
+
 memory[4110] = 0xf3 
+
 memory[4111] = 0xea # NOP NOP NOP
+
 memory[4112] = 0xea
+
 memory[4113] = 0xea
+
 memory[4114] = 0xa9 # LDA #0x01
+
 memory[4115] = 0x01
+
 memory[4116] = 0xea # NOP
+
 memory[4117] = 0x4c # JMP 0x1002 (4097)
+
 memory[4118] = 0x02
+
 memory[4119] = 0x10
 
 ## Implemented Instructions
