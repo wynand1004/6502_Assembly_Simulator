@@ -1,5 +1,7 @@
 # 6502_Assembly_Simulator
-A Simple Simulator for students to use to learn Assembly Language
+A Simple Simulator for students to use to learn 6502 Assembly Language.  
+
+It is a work in progress and nowhere near complete.
 
 ## Implemented Instructions
 LDA (Immediate)
