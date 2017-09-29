@@ -1,7 +1,33 @@
 # 6502_Assembly_Simulator
 A Simple Simulator for students to use to learn Assembly Language
 
-This is a work in progress.  Currently a number of commands have been coded, but there are still a lot to go.
+## Implemented Instructions
+LDA (Immediate)
+STA (Absolute)
+LDX (Immediate)
+STX (Absolute)
+INC (Absolute)
+INX
+INY
+JMP (Absolute)
+TAX
+TXA
+DEX
+TAY
+TYA
+DEY
+CLC
+SEC
+CLI
+SEI
+CLV
+CLD
+SED
+NOP
+CMP (Immediate)
+BEQ
+BNE
+
 
 # To Try It Out
  - Download the repository and run simulator.py using Python 2 or Python 3
