@@ -1,10 +1,10 @@
 # 6502_Assembly_Simulator
 A Simple Simulator for students to use to learn 6502 Assembly Language.  
 
-It is a work in progress and nowhere near complete.
+It is a work in progress and nowhere near complete but the basic structure is there.  See below to see which commands have been implemented thus far.
 
 # Implementation Details
-The program is a simulation of a computer running a 6502 CPU.  There is a 32x24 graphics display capable of displaying 16 colors, and a 40x5 text display. Graphics memory starts from 1024 ($0400), and text memory starts at 2048 ($0800). Execution begins at 4096 ($1000).  The text display displays standard ASCII characters - no unicode or double-byte characters.
+The program is a simulation of an 8-bit computer running a 6502 CPU.  There is a 32x24 graphics display capable of displaying 16 colors, and a 40x5 text display. Graphics memory starts from 1024 ($0400), and text memory starts at 2048 ($0800). Execution begins at 4096 ($1000).  The text display displays standard ASCII characters - no unicode or double-byte characters.
 
 Color List:
 
