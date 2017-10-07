@@ -20,7 +20,7 @@ class CPU(object):
 		self.stack_pointer = 0xff
 		
 		# Opcode Length
-		self.opcode_length = {0: 1, 192: 2, 132: 2, 5: 2, 134: 2, 136: 1, 9: 2, 138: 1, 140: 3, 13: 3, 142: 3, 237: 3, 16: 2, 152: 1, 56: 1, 24: 1, 154: 1, 133: 2, 160: 2, 176: 2, 162: 2, 164: 2, 165: 2, 166: 2, 96: 1, 168: 1, 169: 2, 170: 1, 172: 3, 173: 3, 174: 3, 48: 2, 200: 1, 184: 1, 88: 1, 186: 1, 76: 3, 64: 1, 32: 3, 196: 2, 197: 2, 198: 2, 72: 1, 201: 2, 202: 1, 204: 3, 205: 3, 206: 3, 141: 3, 80: 2, 248: 1, 216: 1, 229: 2, 224: 2, 144: 2, 228: 2, 101: 2, 230: 2, 232: 1, 105: 2, 234: 1, 236: 3, 109: 3, 238: 3, 112: 2, 104: 1, 108: 3, 233: 2, 120: 1, 0xc9: 2, 0xf0: 2, 0xd0: 2}
+		self.opcode_length = {0: 1, 192: 2, 132: 2, 5: 2, 134: 2, 136: 1, 9: 2, 138: 1, 140: 3, 13: 3, 142: 3, 237: 3, 16: 2, 152: 1, 56: 1, 24: 1, 154: 1, 133: 2, 160: 2, 176: 2, 162: 2, 164: 2, 165: 2, 166: 2, 96: 1, 168: 1, 169: 2, 170: 1, 172: 3, 173: 3, 174: 3, 48: 2, 200: 1, 184: 1, 88: 1, 186: 1, 76: 3, 64: 1, 32: 3, 196: 2, 197: 2, 198: 2, 72: 1, 201: 2, 202: 1, 204: 3, 205: 3, 206: 3, 141: 3, 80: 2, 248: 1, 216: 1, 229: 2, 224: 2, 144: 2, 228: 2, 101: 2, 230: 2, 232: 1, 105: 2, 234: 1, 236: 3, 109: 3, 238: 3, 112: 2, 104: 1, 108: 3, 233: 2, 120: 1, 0xc9: 2, 0xf0: 2, 0xd0: 2, 0xE0: 2, 0xE4: 2, 0xC0: 2, 0xC4: 2}
 
 		# Show Trace Output
 		self.show_trace = True
@@ -232,6 +232,61 @@ class CPU(object):
 				self.carry = False
 
 			self.trace("CMP {}".format(value))
+			
+		# CPX Immediate
+		elif opcode == 0xE0:
+			value = memory[self.program_counter + 0x01]
+			if value == self.a:
+				self.zero = True
+			elif value > self.a:
+				self.carry = True
+			else:
+				self.zero = False
+				self.carry = False
+
+			self.trace("CPX {}".format(value))
+		
+		# CPX Zero Page
+		elif opcode == 0xE4:
+			value = memory[memory[self.program_counter + 0x01]]
+			if value == self.a:
+				self.zero = True
+			elif value > self.a:
+				self.carry = True
+			else:
+				self.zero = False
+				self.carry = False
+
+			#I'm not sure if this line should be the same as the one for immediate mode or not.
+			self.trace("CPX {}".format(value)) 
+			
+		# CPY Immediate
+		elif opcode == 0xC0:
+			value = memory[self.program_counter + 0x01]
+			if value == self.a:
+				self.zero = True
+			elif value > self.a:
+				self.carry = True
+			else:
+				self.zero = False
+				self.carry = False
+
+			self.trace("CPY {}".format(value))
+		
+		#CPY Zero Page
+		elif opcode == 0xC4:
+			value = memory[memory[self.program_counter + 0x01]]
+			if value == self.a:
+				self.zero = True
+			elif value > self.a:
+				self.carry = True
+			else:
+				self.zero = False
+				self.carry = False
+
+			self.trace("CPY {}".format(value))
+		
+
 
 		# BEQ
 		elif opcode == 0xF0:
