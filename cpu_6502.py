@@ -236,9 +236,9 @@ class CPU(object):
 		# CPX Immediate
 		elif opcode == 0xE0:
 			value = memory[self.program_counter + 0x01]
-			if value == self.a:
+			if value == self.x:
 				self.zero = True
-			elif value > self.a:
+			elif value > self.x:
 				self.carry = True
 			else:
 				self.zero = False
@@ -249,9 +249,9 @@ class CPU(object):
 		# CPX Zero Page
 		elif opcode == 0xE4:
 			value = memory[memory[self.program_counter + 0x01]]
-			if value == self.a:
+			if value == self.x:
 				self.zero = True
-			elif value > self.a:
+			elif value > self.x:
 				self.carry = True
 			else:
 				self.zero = False
@@ -263,9 +263,9 @@ class CPU(object):
 		# CPY Immediate
 		elif opcode == 0xC0:
 			value = memory[self.program_counter + 0x01]
-			if value == self.a:
+			if value == self.y:
 				self.zero = True
-			elif value > self.a:
+			elif value > self.y:
 				self.carry = True
 			else:
 				self.zero = False
@@ -276,9 +276,9 @@ class CPU(object):
 		#CPY Zero Page
 		elif opcode == 0xC4:
 			value = memory[memory[self.program_counter + 0x01]]
-			if value == self.a:
+			if value == self.y:
 				self.zero = True
-			elif value > self.a:
+			elif value > self.y:
 				self.carry = True
 			else:
 				self.zero = False
