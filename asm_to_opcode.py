@@ -1,4 +1,5 @@
 asm = """
+LDA $C0
 LDA #$01
 STA $400
 INC $1003
@@ -13,25 +14,37 @@ NOP
 JMP $1002
 """
 
+memory = []
+opcodes = {
+	"TAX": 0xe8,
+	"TXA": 0x1a
+}
+
 import re
 
 lines = re.split('\n', asm)
 
 for line in lines:
 	mode = ""
+	value = ""
 	tokens = re.split(' ', line.strip())
 
 	if len(tokens) == 1:
+		mode = "implied"
+		
 		# Deal with single length opcodes first
-		token = tokens[0].strip()
+		token = tokens[0].strip().upper()
 
-		if token == "TAX":
-			print("0xe8")
+		if token == "\n" or token == "":
+			continue
+		elif token == "TAX":
+			memory.append(opcodes[token])
 		elif token == "TXA":
-			print("0x1a")
+			memory.append(opcodes[token])
 
 	elif len(tokens) == 2:
-		
+		# Set the token
+		token = tokens[0].strip().upper()
 		# Decide addressing mode
 		value = tokens[1].strip()
 
@@ -40,17 +53,34 @@ for line in lines:
 			mode = "direct"
 			if value[0] == "$":
 				value = value[1:]
+				# Convert to hex value
+				value = int(value, 16)
+			else:
+				# Convert to decimal value
+				value = int(value, 10)	
+			
+			# Check for zero page mode
+			if value <= 255:
+				mode = "zeropage"
 				
 		elif value[0] == "#":
 			mode = "immediate"
 			if value[1] == "$":
 				value = value[2:]
+				# Convert to hex value
+				value = int(value, 16)
 			else:
-				value = value[1:]	
+				value = value[1:]
+				# convert to decimal value
+				value = int(value, 10)	
 
-		# Temp output
-		print(mode)
-		print (value)	
 	else:
-		print(token)
+		print("Parsing Error: {}".format(line))
+
+	# Temp output
+	print("{: <20}; {: <3} {: <10} {: <10}".format(line, token, mode, value))
+
+
+print("")
+print(memory)
 	
