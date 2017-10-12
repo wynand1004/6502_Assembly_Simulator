@@ -1,25 +1,39 @@
 asm = """
-LDA $C0
-LDA #$01
-STA $400
-INC $1003
-TAX
-INX
-TXA
-CMP #$0f
-BEQ $1012
-JMP $1002
-LDA #$01
-NOP
-JMP $1002
+LDA #$01	; Load 1 into the accumulator
+STA $400	; Store the accumulator in $400
+INC $1003	; Increase the value in $1003
+TAX			; Transfer A to X
+INX			; Increase X
+TXA			; Transfer X to A
+CMP #$0f	; Compare A with $F
+BEQ $1012	; Branch if equal to $1012
+JMP $1002	; If not equal jump to $1002
+LDA #$01	; Load the accumulator with 1 again
+NOP			; Do nothing
+JMP $1002	; Jump to $1002
 """
 
-def convert_asm_to_opcodes(asm):
+def get_little_endian(value):
+	# Convert value to hex string
+	value = hex(value)
+	# Remove 0x
+	value = value[2:]
+	# Get the last 2 digits
+	little = value[-2:]
+	# Get the first 2 digits
+	big = value[:-2]
+	# Convert to ints
+	little = int(little, 16)
+	big = int(big, 16)
 
+	# Return result as a list
+	return [little, big]
+
+def convert_asm_to_opcodes(asm, start_of_execution):
 
 	memory = []
 	opcodes = {
-		"TAX": 0xe8,
+		"TAX": 0xa8,
 		"TXA": 0x1a,
 		"INX": 0xe8,
 		"NOP": 0xea
@@ -30,6 +44,12 @@ def convert_asm_to_opcodes(asm):
 	lines = re.split('\n', asm)
 
 	for line in lines:
+
+		# Remove comments
+		if ";" in line:
+			index = line.index(";")
+			line = line[:index].strip()
+
 		mode = ""
 		value = ""
 		tokens = re.split(' ', line.strip())
@@ -45,6 +65,10 @@ def convert_asm_to_opcodes(asm):
 			elif token == "TAX":
 				memory.append(opcodes[token])
 			elif token == "TXA":
+				memory.append(opcodes[token])
+			elif token == "INX":
+				memory.append(opcodes[token])
+			elif token == "NOP":
 				memory.append(opcodes[token])
 
 		elif len(tokens) > 1:
@@ -120,6 +144,16 @@ def convert_asm_to_opcodes(asm):
 		else:
 			print("Parsing Error: {}".format(line))
 
+
+		# Add the correct values
+		if mode == "zeropage":
+			memory.append(value)
+		elif mode == "immediate":
+			memory.append(value)
+		elif mode == "absolute":
+			address = get_little_endian(value)
+			# print(mode, address)
+			memory += address
 		# Temp output
 		print("{: <20}; {: <3} {: <10} {: <10}".format(line, token, mode, value))
 
@@ -132,5 +166,8 @@ def convert_asm_to_opcodes(asm):
 
 # For testing purposes
 if __name__ == "__main__":
-	memory = convert_asm_to_opcodes(asm)
+	import os
+	os.system("clear")
+	print("Compile ASM to 6502 Opcodes\n")
+	memory = convert_asm_to_opcodes(asm, 4096)
 	print(memory)
