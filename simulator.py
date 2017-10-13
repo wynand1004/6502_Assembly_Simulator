@@ -18,10 +18,10 @@ root.title("6502 Assembler Simulator")
 class Display(object):
 	def __init__(self, start_of_video_memory, start_of_character_memory):
 		self.canvas = tkinter.Canvas(root, width=320, height=240)
-		self.canvas.pack()
+		self.canvas.grid(column=1,row=0)
 
 		self.label = tkinter.Label(root, width=40, height=5, bg="black", fg="white", justify="left", font=("Courier", 10))
-		self.label.pack()		
+		self.label.grid(column=1,row=1)		
 		
 		self.start_of_video_memory = start_of_video_memory
 		self.start_of_character_memory = start_of_character_memory
@@ -65,7 +65,7 @@ display = Display(1024, 2048)
 
 # Create CPU Monitoring Label
 cpu_label = tkinter.Label(root, width=40, height=20, bg="black", fg="green", justify="left", font=("Courier", 10))
-cpu_label.pack()
+cpu_label.grid(column=2,row=0)
 
 # Memory (Simple list of integers 65kb))
 memory = []
@@ -81,31 +81,36 @@ for location in range(2048, 2249):
 cpu = CPU(0x1000)
 
 # Add code for testing
-memory[4096] = 0xa9 # LDA #0x01
-memory[4097] = 0x02
-memory[4098] = 0x8d # STA 0x400
-memory[4099] = 0x00
-memory[4100] = 0x04
-memory[4101] = 0xee # INC 0x1003 (4099)
-memory[4102] = 0x03 
-memory[4103] = 0x10 
-memory[4104] = 0xaa # TAX 
-memory[4105] = 0xe8 # INX 
-memory[4106] = 0x8a # TXA 
-memory[4107] = 0xc9 # CMP #0x0f
-memory[4108] = 0x0f
-memory[4109] = 0xd0 # BNE (Jump ahead back 13 memory locations from start of next instruction)
-memory[4110] = 0xf3 
-memory[4111] = 0xea # NOP NOP NOP
-memory[4112] = 0xea
-memory[4113] = 0xea
-memory[4114] = 0xa9 # LDA #0x01
-memory[4115] = 0x01
-memory[4116] = 0xea # NOP
-memory[4117] = 0x4c # JMP 0x1002 (4097)
-memory[4118] = 0x02
-memory[4119] = 0x10
+# memory[4096] = 0xa9 # LDA #0x02
+# memory[4097] = 0x02
+# memory[4098] = 0x8d # STA 0x400
+# memory[4099] = 0x00
+# memory[4100] = 0x04
+# memory[4101] = 0xee # INC 0x1003 (4099)
+# memory[4102] = 0x03 
+# memory[4103] = 0x10 
+# memory[4104] = 0xaa # TAX 
+# memory[4105] = 0xe8 # INX 
+# memory[4106] = 0x8a # TXA 
+# memory[4107] = 0xc9 # CMP #0x0f
+# memory[4108] = 0x0f
+# memory[4109] = 0xd0 # BNE (Jump ahead back 13 memory locations from start of next instruction)
+# memory[4110] = 0xf3 
+# memory[4111] = 0xea # NOP NOP NOP
+# memory[4112] = 0xea
+# memory[4113] = 0xea
+# memory[4114] = 0xa9 # LDA #0x01
+# memory[4115] = 0x01
+# memory[4116] = 0xea # NOP
+# memory[4117] = 0x4c # JMP 0x1002 (4097)
+# memory[4118] = 0x02
+# memory[4119] = 0x10
 
+program = [169, 2, 141, 0, 4, 238, 3, 16, 170, 232, 138, 201, 15, 208, 243, 234, 234, 234, 169, 1, 234, 76, 2, 16]
+
+
+for i in range(len(program)):
+	memory[4096 + i] = program[i]
 
 def update_cpu_label(cpu):
 	data = """

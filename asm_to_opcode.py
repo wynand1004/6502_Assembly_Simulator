@@ -1,16 +1,18 @@
 asm = """
-LDA #$01	; Load 1 into the accumulator
-STA $400	; Store the accumulator in $400
-INC $1003	; Increase the value in $1003
-TAX			; Transfer A to X
-INX			; Increase X
-TXA			; Transfer X to A
-CMP #$0f	; Compare A with $F
-BEQ $1012	; Branch if equal to $1012
-JMP $1002	; If not equal jump to $1002
-LDA #$01	; Load the accumulator with 1 again
-NOP			; Do nothing
-JMP $1002	; Jump to $1002
+LDA #$02
+STA $400
+INC $1003
+TAX 
+INX 
+TXA 
+CMP #$0f
+BNE 4098
+NOP
+NOP
+NOP
+LDA #$01
+NOP
+JMP $1002 
 """
 
 def get_little_endian(value):
@@ -30,11 +32,12 @@ def get_little_endian(value):
 	return [little, big]
 
 def convert_asm_to_opcodes(asm, start_of_execution):
+	current_memory_location = start_of_execution
 
 	memory = []
 	opcodes = {
-		"TAX": 0xa8,
-		"TXA": 0x1a,
+		"TAX": 0xaa,
+		"TXA": 0x8a,
 		"INX": 0xe8,
 		"NOP": 0xea
 	}
@@ -70,6 +73,8 @@ def convert_asm_to_opcodes(asm, start_of_execution):
 				memory.append(opcodes[token])
 			elif token == "NOP":
 				memory.append(opcodes[token])
+
+			current_memory_location += 1
 
 		elif len(tokens) > 1:
 			# Set the token
@@ -133,6 +138,11 @@ def convert_asm_to_opcodes(asm, start_of_execution):
 
 			elif token == "BEQ":
 				memory.append(0xf0)
+				mode = "relative"
+
+			elif token == "BNE":
+				memory.append(0xd0)
+				mode= "relative"
 
 			elif token == "JMP":
 				if mode == "absolute":
@@ -148,14 +158,27 @@ def convert_asm_to_opcodes(asm, start_of_execution):
 		# Add the correct values
 		if mode == "zeropage":
 			memory.append(value)
+			current_memory_location += 2
 		elif mode == "immediate":
 			memory.append(value)
+			current_memory_location += 2
 		elif mode == "absolute":
 			address = get_little_endian(value)
 			# print(mode, address)
 			memory += address
+			current_memory_location += 3
+		# Use for branches - not a real mode
+		elif mode == "relative":
+			# Calculate the offset (must add plus 2 as it is calculated from start of next instruction)
+			offset = value - current_memory_location -2
+			print(offset)
+			if offset < 0:
+				offset += 256
+			memory.append(offset)
+			current_memory_location += 3
+		
 		# Temp output
-		print("{: <20}; {: <3} {: <10} {: <10}".format(line, token, mode, value))
+		print("{: <20}; {: <3} {: <10} {: <10} {}".format(line, token, mode, value, current_memory_location))
 
 
 	print("")
