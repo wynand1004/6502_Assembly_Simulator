@@ -21,7 +21,10 @@ class Display(object):
 		self.canvas.grid(column=1,row=0)
 
 		self.label = tkinter.Label(root, width=40, height=5, bg="black", fg="white", justify="left", font=("Courier", 10))
-		self.label.grid(column=1,row=1)		
+		self.label.grid(column=1,row=1)	
+		
+		self.editor = tkinter.Text(root, width=40, height=25)
+		self.editor.grid(column = 0, row=0, rowspan=2)	
 		
 		self.start_of_video_memory = start_of_video_memory
 		self.start_of_character_memory = start_of_character_memory
